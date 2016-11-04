@@ -18,7 +18,7 @@ class Tes1(scrapy.Spider):
 
     def __init__(self):
         self.db = MySQLdb.connect("127.0.0.1", "root", "root", "olx")
-        self.stmt = "insert into cars(url, title, price, posted, city, province, contact_person, description, source_site, year, model, type, old_new) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        self.stmt = "insert into cars(url, title, price, posted, city, province, contact_person, description, source_site, year, merek, model, type, old_new, nego, uploaded_by, phone, seen) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
     def parse(self, response):
         urls = response.xpath('//table[@id="offers_table"]/tbody/tr/td/table/tbody/tr/td[3]/h3/a/@href').extract()
@@ -78,9 +78,9 @@ class Tes1(scrapy.Spider):
 
 
 
-        # c.execute("insert into cars(url, title, price, posted, city, province, contact_person, description, source_site, year, model, type, old_new) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
-        #          (response.url, title, price, posted, city, province, cp, desc, ss, year, model, tipe, old_new))
-        # self.db.commit()    
+        c.execute("insert into cars(url, title, price, posted, city, province, contact_person, description, source_site, year, merek, model, type, old_new, nego, uploaded_by, phone, seen) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
+                 (response.url, title, price, posted, city, province, cp, desc, ss, year, merek, model, tipe, old_new, nego, uploaded_by, phone, seen))
+        self.db.commit()    
 
         cars = {
             'url'           : response.url,
@@ -93,6 +93,8 @@ class Tes1(scrapy.Spider):
             'desc'          : desc,
             'url'           : response.url,
             'source_site'   : ss,    
+            'merek'         : merek,
+            'model'         : model,    
             'type'          : tipe,   
             'year'          : year,   
             'old'           : old_new,
