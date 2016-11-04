@@ -30,8 +30,8 @@ class Tes1(scrapy.Spider):
 
         # process next page
         # next_page_url = response.xpath('//*[@id="body-container"]/div/div/div/span/a/@href').extract_first()
-        next_page_url = response.xpath('//*[@id="body-container"]/div/div/div[2]/span[16]/a/@href').extract_first() # YANG INI UNTUK NGETES DOANG
-        # next_page_url = response.xpath('//*[@id="body-container"]/div/div/div/span[@class="fbold next abs large"]/a/@href').extract_first() #YANG INI UDAH OK NEXT PAGE NYA NICH
+        # next_page_url = response.xpath('//*[@id="body-container"]/div/div/div[2]/span[16]/a/@href').extract_first() # YANG INI UNTUK NGETES DOANG
+        next_page_url = response.xpath('//*[@id="body-container"]/div/div/div/span[@class="fbold next abs large"]/a/@href').extract_first() #YANG INI UDAH OK NEXT PAGE NYA NICH
         absolute_next_page_url = response.urljoin(next_page_url)
         request = scrapy.Request(absolute_next_page_url)
         yield request
