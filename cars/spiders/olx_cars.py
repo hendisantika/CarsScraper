@@ -71,9 +71,8 @@ class Tes1(scrapy.Spider):
         nego = response.xpath(
                     '//*[@id="offeractions"]/div/div/div[1]/small/text()').extract_first().strip()
         uploaded_by = response.xpath(
-                        '//*[@id="offeractions"]/div/div/div[1]/small/text()').extract_first().strip()
-        phone = response.xpath(
-                        '//*[@id="offeractions"]/div/div/div[1]/small/text()').extract_first().strip()
+                        '//*[@id="offer_active"]/div[3]/div[1]/div[1]/div[1]/p/small/span/a/span/text()').extract_first().strip()
+        phone = ''
         seen = response.xpath(
                         '//*[@id="offerbottombar"]/div[3]/strong/text()').extract_first().strip()
 
@@ -84,19 +83,23 @@ class Tes1(scrapy.Spider):
         # self.db.commit()    
 
         cars = {
-            # 'url'           : response.url,
-            # 'title'         : title,
-            # 'price'         : price,
-            # 'city'          : city,
-            # 'province'      : province,
-            # 'posted'        : posted,
-            # 'cp'            : cp,
-            # 'desc'          : desc,
-            # 'url'           : response.url,
-            # 'source_site'   : ss,    
-            'type '         : tipe   
-            # 'year '         : year,   
-            # 'old '          : old_new   
+            'url'           : response.url,
+            'title'         : title,
+            'price'         : price,
+            'city'          : city,
+            'province'      : province,
+            'posted'        : posted,
+            'cp'            : cp,
+            'desc'          : desc,
+            'url'           : response.url,
+            'source_site'   : ss,    
+            'type'          : tipe,   
+            'year'          : year,   
+            'old'           : old_new,
+            'nego'          : nego,    
+            'uploaded_by'   : uploaded_by,   
+            'phone'         : phone,   
+            'seen'          : seen   
             }
         yield cars                 
 
