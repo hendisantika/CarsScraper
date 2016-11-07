@@ -1,61 +1,54 @@
--- phpMyAdmin SQL Dump
--- version 4.5.4.1deb2ubuntu2
--- http://www.phpmyadmin.net
---
--- Host: localhost
--- Generation Time: Nov 04, 2016 at 07:47 AM
--- Server version: 5.7.16-0ubuntu0.16.04.1
--- PHP Version: 7.0.8-0ubuntu0.16.04.3
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
+/*
+SQLyog Ultimate v11.33 (64 bit)
+MySQL - 5.7.16-0ubuntu0.16.04.1 : Database - olx
+*********************************************************************
+*/
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
 
---
--- Database: `olx`
---
+/*!40101 SET SQL_MODE=''*/;
 
--- --------------------------------------------------------
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`olx` /*!40100 DEFAULT CHARACTER SET latin1 */;
 
---
--- Table structure for table `cars`
---
+USE `olx`;
+
+/*Table structure for table `cars` */
+
+DROP TABLE IF EXISTS `cars`;
 
 CREATE TABLE `cars` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `url` varchar(255) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `city` varchar(255) DEFAULT NULL,
+  `province` varchar(255) DEFAULT NULL,
   `description` mediumtext,
-  `price` varchar(255) DEFAULT NULL,
+  `price` int(255) DEFAULT NULL,
   `contact_person` varchar(255) DEFAULT NULL,
-  `posted` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `cars`
---
-ALTER TABLE `cars`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `cars`
---
-ALTER TABLE `cars`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+  `source_site` varchar(50) DEFAULT NULL,
+  `year` int(11) DEFAULT NULL,
+  `brand` varchar(255) DEFAULT NULL,
+  `model` varchar(150) DEFAULT NULL,
+  `type` varchar(100) DEFAULT NULL,
+  `ownership` varchar(10) DEFAULT NULL,
+  `engine_capacity` smallint(6) DEFAULT NULL,
+  `engine_type` varchar(25) DEFAULT NULL,
+  `transmission` varchar(25) DEFAULT NULL,
+  `doors` smallint(6) DEFAULT NULL,
+  `color` varchar(20) DEFAULT NULL,
+  `airbags` varchar(20) DEFAULT NULL,
+  `satnav` varchar(20) DEFAULT NULL,
+  `radio` varchar(10) DEFAULT NULL,
+  `cd_player` varchar(10) DEFAULT NULL,
+  `posted` varchar(50) DEFAULT NULL,
+  `nego` varchar(20) NOT NULL,
+  `uploaded_by` varchar(25) NOT NULL,
+  `phone` varchar(25) NOT NULL,
+  `seen` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4637 DEFAULT CHARSET=latin1;
