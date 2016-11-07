@@ -13,7 +13,7 @@ class Tes1(scrapy.Spider):
     ]
 
     def __init__(self):
-        self.db = MySQLdb.connect("127.0.0.1", "root", "root", "carsDB")
+        self.db = MySQLdb.connect("127.0.0.1", "root", "root", "olx")
         self.stmt = "insert into jualo_cars(url, title, price, posted, city, contact_person, description) values(%s, %s, %s, %s, %s, %s, %s)"
 
     def parse(self, response):
