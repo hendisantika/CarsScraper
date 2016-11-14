@@ -26,7 +26,7 @@ class Tes1(scrapy.Spider):
             yield request
 
         # process next page
-        # next_page_url = response.xpath('/html/body/div[2]/div/div[4]/div[3]/div[1]/div/a[@class="next_page"]/@href').extract_first() #UDAH OK NICH NEXT PAGE NYA
+        # next_page_url = response.xpath('/html/body/div[2]/div/div[4]/div[3]/div[1]/div[@class="pagination"]/a[@class="next_page"]/@href').extract_first() #UDAH OK NICH NEXT PAGE NYA
         next_page_url = response.xpath('/html/body/div[2]/div/div[4]/div[3]/div[1]/div/a[8]/@href').extract_first() #YANG INI BUAT NGETES DOANG
         # next_page_url = response.xpath('//a[@class="next_page"]/@href').extract_first()
         absolute_next_page_url = response.urljoin(next_page_url)
@@ -35,7 +35,8 @@ class Tes1(scrapy.Spider):
 
     def parse_cars(self, response):
         c = self.db.cursor()
-        title = response.xpath('//html/body/div/div/table/tbody/tr/td/div[@class="ad_show_title"]/text()').extract_first()
+        # title = response.xpath('//html/body/div/div/table/tbody/tr/td/div[@class="ad_show_title"]/text()').extract_first()
+        title = response.xpath('//html/body/div/div/table/tbody/tr/td[@class="left_ad_show_main_table"]/div[@class="ad_show_title"]/text()').extract_first()
         price_tmp = response.xpath('//div[@class="real_price"]/text()').extract_first().strip()
         price = re.sub('[Rp. ]', "", price_tmp)
         city_tmp1 = '\n'.join(response.xpath('//td[@class="top_location"]/text()').extract()).strip()
@@ -61,13 +62,15 @@ class Tes1(scrapy.Spider):
                 
         tipe = tipe.strip() if tipe is not None else ''
         ownership = '\n'.join(response.xpath('//td[@class="second-hand"]/text()').extract()).strip()
-                    #'/html/body/div[3]/div/table/tbody/tr/td[1]/table[1]/tbody/tr/td[1]/text()').extract_first()
-                    
+                            
         model = ''
+        seen = response.xpath('//*[@id="view_count"]/text()').extract_first()
 
         # c.execute("insert into cars(url, title, price, posted, city, contact_person, description, source_site, year, model, type, old_new) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
         #          (response.url, title, price, posted, city, cp, desc, ss, year, model, tipe, old_new))
-        # self.db.commit()    
+        # self.db.commit()   
+
+        # print "Title : ", title 
 
         cars = {
             'title'         : title,
@@ -83,6 +86,7 @@ class Tes1(scrapy.Spider):
             'type'          : tipe,   
             'year'          : year,   
             'ownership'     : ownership,   
+            'seen'          : seen,   
             'url'           : response.url
             }
         yield cars                 
