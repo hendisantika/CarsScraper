@@ -60,8 +60,8 @@ class Mudah(scrapy.Spider):
             #'/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/text()').extract_first()    
         desc = '\n'.join(response.xpath('//span[@itemprop="description"]/text()').extract())
         # desc = desc.strip()
-        desc = re.sub('[\n]', "", desc)
-        
+        desc = re.sub('[\n\t]', " ", desc)
+        desc = desc.strip()
         #price_tmp = response.xpath('//div[@class="real_price"]/text()').extract_first().strip()
         #price = re.sub('[Rp. ]', "", price_tmp)
         #price = response.xpath('//*[@id="listing_2912099"]/div[2]/div[1]/div[1]/div/div[2]/p[2]/text').extract_first() 
