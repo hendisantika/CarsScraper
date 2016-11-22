@@ -60,13 +60,15 @@ class Oto(scrapy.Spider):
         # desc = " ".join(response.xpath('//*[@id="page-container"]/div[5]/div/div/div/div[1]/div[8]/text()').extract()).strip()
         desc = '\n'.join(response.xpath('//*[@id="page-container"]/div[5]/div/div/div/div[1]/div[8]/text()').extract()).strip()
         # desc = desc.rstrip(desc.linesep)
-        desc = re.sub('[\r\n]', " ", desc)
+        desc = re.sub('[\r\n]', " ", desc).strip()
+        desc = desc.strip()
         # desc = desc.replace('\n', ' ').replace('\r', '')
         # desc = desc.strip()
         
-        #price_tmp = response.xpath('//div[@class="real_price"]/text()').extract_first().strip()
-        #price = re.sub('[Rp. ]', "", price_tmp)
-        price = response.xpath('//*[@id="page-container"]/div[5]/div/div/div/div[1]/div[1]/text').extract_first() 
+
+        price = response.xpath('//*[@id="page-container"]/div[5]/div/div/div/div[1]/div[1]/text()').extract_first() 
+        price = re.sub('[RM, ]', "", price)
+        price = price.strip()
          # ' + response.xpath('//dd[@class="dd-price"]/meta[@itemprop="price"]/@content').extract_first()
 
         # cp = response.xpath('//html/body/div/div/table/tbody/tr/td/table/tbody/tr/td/div/div/div/div/a/text()').extract_first()
@@ -75,8 +77,8 @@ class Oto(scrapy.Spider):
         # print "contact person : ", cp
         
         ss = get_tld(response.url)
-        year = response.xpath('//*[@id="page-container"]/div[5]/div/div/div/div[1]/div[7]/div/div[1]/ul/li[5]/div[2]/text').extract_first()
-        brand = response.xpath('//*[@id="page-container"]/div[5]/div/div/div/div[1]/div[7]/div/div[1]/ul/li[1]/div[2]/a/text').extract_first()
+        year = response.xpath('//*[@id="page-container"]/div[5]/div/div/div/div[1]/div[7]/div/div[1]/ul/li[5]/div[2]/text()').extract_first()
+        brand = response.xpath('//*[@id="page-container"]/div[5]/div/div/div/div[1]/div[7]/div/div[1]/ul/li[1]/div[2]/a/text()').extract_first()
         model = response.xpath('//*[@id="page-container"]/div[5]/div/div/div/div[1]/div[7]/div/div[1]/ul/li[2]/div[2]/a/text()').extract_first()
         model = model.strip() if model is not None else '' 
         tipe = response.xpath('//*[@id="page-container"]/div[5]/div/div/div/div[1]/div[7]/div/div[1]/ul/li[3]/div[2]/text()').extract_first()
