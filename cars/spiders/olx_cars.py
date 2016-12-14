@@ -9,6 +9,11 @@ import MySQLdb
 import re
 from tld import get_tld
 from string import Template
+import time
+import datetime
+from datetime import datetime
+from datetime import date, timedelta
+
 
 class Tes1(scrapy.Spider):
     name = "olx"
@@ -18,7 +23,7 @@ class Tes1(scrapy.Spider):
 
     def __init__(self):
         self.db = MySQLdb.connect("127.0.0.1", "root", "root", "olx")
-        self.stmt = "insert into cars(url, title, price, posted, city, province, contact_person, description, source_site, year, transmission, brand, model, type, ownership, nego, uploaded_by, phone, seen) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        self.stmt = "insert into cars_tes3(url, title, price, posted, city, province, contact_person, description, source_site, year, transmission, brand, model, type, ownership, nego, uploaded_by, phone, seen) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
     def parse(self, response):
         urls = response.xpath('//table[@id="offers_table"]/tbody/tr/td/table/tbody/tr/td[3]/h3/a/@href').extract()
@@ -58,11 +63,87 @@ class Tes1(scrapy.Spider):
         # posted = posted_tmp
         # posted = re.sub('sejak,', "", posted_tmp)
         posted = posted_tmp 
-        b = {'sejak ': '', ',' : '', '  ' : ' '}
+        b = {'Ditambahkan': '','sejak ': '', '\t\t\t': '',' \t\t\t ': '',',' : '', '  ' : ' '}
         # Pattern untuk tanggal posting
         # b = {'Ditambahkan': '', 'sejak': '', ',' : '', '  ' : ' '}
         for x,y in b.items():
             posted = posted.replace(x, y).strip()
+
+        # posted = convert(posted)
+
+        tahun = date.today().year
+        # posted = str
+        if ":" in posted:
+           tgl = time.strftime("%Y-%m-%d")
+           posted = tgl +" "+ posted
+        elif " " in posted:
+            mon = ['Jan', 'jan', 'feb', 'Feb', 'peb', 'Peb', 'Mar', 'mar', 'Apr', 'apr', 'Mei', 'mei', 'Jun', 'jun', 'Jul', 'jul', 'Ags', 'ags', 'Sep', 'sep', 'Okt', 'okt', 'Nop','nop', 'Des', 'des']
+            # posted = "2 Okt"
+            posted = filter(None, re.split(" ", posted))
+            tgl = posted[0]
+            bln = posted[1]
+
+            if any(x in posted[1] for x in mon):
+                if "Jan" in posted[1]:
+                    bln = "Jan"
+                elif "jan" in posted[1]:
+                    bln = "jan"
+                if "Feb" in posted[1]:
+                    bln = "Feb"
+                elif "feb" in posted[1]:
+                    bln = "feb"
+                elif "Peb" in posted[1]:
+                    bln = "Feb"
+                elif "peb" in posted[1]:
+                    bln = "feb"
+                elif "Mar" in posted[1]:
+                    bln = "mar"
+                elif "mar" in posted[1]:
+                    bln = "mar"
+                elif "Apr" in posted[1]:
+                    bln = "Apr"
+                elif "apr" in posted[1]:
+                    bln = "apr"
+                elif "Mei" in posted[1]:
+                    bln = "May"
+                elif "mei" in posted[1]:
+                    bln = "may"
+                elif "Jun" in posted[1]:
+                    bln = "Jun"
+                elif "jun" in posted[1]:
+                    bln = "jun"
+                elif "Jul" in posted[1]:
+                    bln = "Jul"
+                elif "jul" in posted[1]:
+                    bln = "jul"
+                elif "Ags" in posted[1]:
+                    bln = "aug"
+                elif "ags" in posted[1]:
+                    bln = "aug"
+                elif "Sep" in posted[1]:
+                    bln = "Sep"
+                elif "sep" in posted[1]:
+                    bln = "sep"
+                elif "Okt" in posted[1]:
+                    bln = "Oct"
+                elif "okt" in posted[1]:
+                    bln = "oct"
+                elif "Nop" in posted[1]:
+                    bln = "Nov"
+                elif "nop" in posted[1]:
+                    bln = "nov"
+                elif "Des" in posted[1]:
+                    bln = "Dec"
+                elif "des" in posted[1]:
+                    bln = "dec"
+                else: print "Gak ada"
+
+            posted = datetime.strptime(tgl +" " + bln +" " + str(tahun), '%d %b %Y')
+        elif "kemarin" in posted:
+            posted = date.today() - timedelta(1)
+        else:
+            posted = time.strftime("%Y-%m-%d %H:%M:%S")
+
 
         cp = response.xpath(
             '//*[@id="offeractions"]/div/div/div/div/p/span/text()').extract_first().strip()
@@ -93,7 +174,7 @@ class Tes1(scrapy.Spider):
         # print("Posted3 ", posted3)
         # print("posted :", posted)
 
-        c.execute("insert into cars(url, title, price, posted, city, province, contact_person, description, source_site, year, transmission, brand, model, type, ownership, nego, uploaded_by, phone, seen) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
+        c.execute("insert into cars_tes3(url, title, price, posted, city, province, contact_person, description, source_site, year, transmission, brand, model, type, ownership, nego, uploaded_by, phone, seen) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
                  (response.url, title, price, posted, city, province, cp, desc, ss, year, transmission, brand, model, tipe, ownership, nego, uploaded_by, phone, seen))
         self.db.commit()    
 
@@ -119,7 +200,84 @@ class Tes1(scrapy.Spider):
             'phone'         : phone,   
             'seen'          : seen   
             }
-        yield cars                 
+        yield cars    
+
+
+    def convert(posted):
+        tahun = date.today().year
+        # posted = str
+        if ":" in posted:
+           tgl = time.strftime("%Y-%m-%d")
+           posted = tgl +" "+ posted
+        elif " " in posted:
+            mon = ['Jan', 'jan', 'feb', 'Feb', 'peb', 'Peb', 'Mar', 'mar', 'Apr', 'apr', 'Mei', 'mei', 'Jun', 'jun', 'Jul', 'jul', 'Ags', 'ags', 'Sep', 'sep', 'Okt', 'okt', 'Nop','nop', 'Des', 'des']
+            # posted = "2 Okt"
+            posted = filter(None, re.split(" ", posted))
+            tgl = posted[0]
+            bln = posted[1]
+
+            if any(x in posted[1] for x in mon):
+                if "Jan" in posted[1]:
+                    bln = "Jan"
+                elif "jan" in posted[1]:
+                    bln = "jan"
+                if "Feb" in posted[1]:
+                    bln = "Feb"
+                elif "feb" in posted[1]:
+                    bln = "feb"
+                elif "Peb" in posted[1]:
+                    bln = "Feb"
+                elif "peb" in posted[1]:
+                    bln = "feb"
+                elif "Mar" in posted[1]:
+                    bln = "mar"
+                elif "mar" in posted[1]:
+                    bln = "mar"
+                elif "Apr" in posted[1]:
+                    bln = "Apr"
+                elif "apr" in posted[1]:
+                    bln = "apr"
+                elif "Mei" in posted[1]:
+                    bln = "May"
+                elif "mei" in posted[1]:
+                    bln = "may"
+                elif "Jun" in posted[1]:
+                    bln = "Jun"
+                elif "jun" in posted[1]:
+                    bln = "jun"
+                elif "Jul" in posted[1]:
+                    bln = "Jul"
+                elif "jul" in posted[1]:
+                    bln = "jul"
+                elif "Ags" in posted[1]:
+                    bln = "aug"
+                elif "ags" in posted[1]:
+                    bln = "aug"
+                elif "Sep" in posted[1]:
+                    bln = "Sep"
+                elif "sep" in posted[1]:
+                    bln = "sep"
+                elif "Okt" in posted[1]:
+                    bln = "Oct"
+                elif "okt" in posted[1]:
+                    bln = "oct"
+                elif "Nop" in posted[1]:
+                    bln = "Nov"
+                elif "nop" in posted[1]:
+                    bln = "nov"
+                elif "Des" in posted[1]:
+                    bln = "Dec"
+                elif "des" in posted[1]:
+                    bln = "dec"
+                else: print "Gak ada"
+
+            posted = datetime.strptime(tgl +" " + bln +" " + str(tahun), '%d %b %Y')
+        elif "kemarin" in posted:
+            posted = date.today() - timedelta(1)
+        else:
+            posted = time.strftime("%Y-%m-%d %H:%M:%S")
+        return posted
+
 
 
 
