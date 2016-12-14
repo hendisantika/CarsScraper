@@ -21,7 +21,7 @@ class Tes1(scrapy.Spider):
         self.stmt = "insert into cars(url, title, price, posted, city, province, contact_person, description, source_site, year, transmission, brand, model, type, ownership, nego, uploaded_by, phone, seen) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
     def parse(self, response):
-        urls = response.xpath('//table[@id="offers_table"]/tbody/tr/td/table/tbody/tr/td[3]/h3/a/@href').extract()
+        urls = response.xpath('//*[@id="catalog-index"]/section/section/div[3]/div[3]/div[1]/div[1]/h5/a/@href').extract()
         for url in urls:
             absolute_url = response.urljoin(url)
             request = scrapy.Request(
@@ -93,9 +93,9 @@ class Tes1(scrapy.Spider):
         # print("Posted3 ", posted3)
         # print("posted :", posted)
 
-        c.execute("insert into cars(url, title, price, posted, city, province, contact_person, description, source_site, year, transmission, brand, model, type, ownership, nego, uploaded_by, phone, seen) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
-                 (response.url, title, price, posted, city, province, cp, desc, ss, year, transmission, brand, model, tipe, ownership, nego, uploaded_by, phone, seen))
-        self.db.commit()    
+        # c.execute("insert into cars(url, title, price, posted, city, province, contact_person, description, source_site, year, transmission, brand, model, type, ownership, nego, uploaded_by, phone, seen) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
+        #          (response.url, title, price, posted, city, province, cp, desc, ss, year, transmission, brand, model, tipe, ownership, nego, uploaded_by, phone, seen))
+        # self.db.commit()    
 
         cars = {
             'url'           : response.url,
