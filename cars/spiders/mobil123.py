@@ -1,5 +1,6 @@
 #Scrapy Python
 #Finished @ Friday, November 4th 2016 13.30 WIB
+#Modified Everyday Since Tuesday, December 13 2016
 #Created by : Hendi Santika
 #Waslap / Telegram : +6281321411881
 #Skype : hendi.santika 
@@ -19,7 +20,7 @@ class Tes1(scrapy.Spider):
 
     def __init__(self):
         self.db = MySQLdb.connect("127.0.0.1", "root", "root", "olx")
-        self.stmt = "insert into cars_test2(url, title, price, posted, city, province, source_site, year, transmission, brand, model, type, ownership, engine_capacity, doors) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        self.stmt = "insert into mobil123(url, title, price, posted, city, province, source_site, year, transmission, brand, model, type, ownership, engine_capacity, doors) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
     def parse(self, response):
         # urls = response.xpath('//*[@id="listing_3232491"]/div/div[2]/h2/a/@href').extract()
@@ -138,7 +139,7 @@ class Tes1(scrapy.Spider):
         # print("Posted3 ", posted3)
         # print("doors : ",  doors)
 
-        c.execute("insert into cars_test2(url, title, price, posted, city, province, source_site, year, transmission, brand, model, type, ownership, engine_capacity, doors) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
+        c.execute("insert into mobil123(url, title, price, posted, city, province, source_site, year, transmission, brand, model, type, ownership, engine_capacity, doors) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
                  (response.url, title, price, posted, city, province, ss, year, transmission, brand, model, tipe, ownership, eCap, doors))
         # time.sleep(1)
         self.db.commit()    
