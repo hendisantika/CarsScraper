@@ -36,9 +36,11 @@ class Tes1(scrapy.Spider):
     def parse_cars(self, response):
         c = self.db.cursor()
         # title = response.xpath('//html/body/div/div/table/tbody/tr/td/div[@class="ad_show_title"]/text()').extract_first()
-        title = response.xpath('//html/body/div/div/table/tbody/tr/td[@class="left_ad_show_main_table"]/div[@class="ad_show_title"]/text()').extract_first()
+        # title = response.xpath('//html/body/div/div/table/tbody/tr/td[@class="left_ad_show_main_table"]/div[@class="ad_show_title"]/text()').extract_first()
+        title = response.xpath('/html/body/div[3]/div/div[3]/div[1]/div[1]/h1/text()').extract_first()
         
-        city_tmp1 = '\n'.join(response.xpath('//td[@class="top_location"]/text()').extract()).strip()
+        # city_tmp1 = '\n'.join(response.xpath('//td[@class="top_location"]/text()').extract()).strip() // Udah ganti CSS lagi euuy
+        city_tmp1 = '\n'.join(response.xpath('//li[@class="top_location"]/text()').extract()).strip()
         city_tmp2 = filter(None, re.split("[,]+", city_tmp1))
         # city_tmp2 = re.findall(r"[\w']+", city_tmp1)
         city = city_tmp2[0].strip()
@@ -47,7 +49,8 @@ class Tes1(scrapy.Spider):
         desc = '\n'.join(response.xpath('//div[@class="ad_show_detail"]/text()').extract()).strip().replace('<br>', '\n')
             #'/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/text()').extract_first()    
         
-        price_tmp = response.xpath('//div[@class="real_price"]/text()').extract_first().strip()
+        # price_tmp = response.xpath('//div[@class="real_price"]/text()').extract_first().strip()
+        price_tmp = response.xpath('/html/body/div[3]/div/div[3]/div[2]/div[2]/div[1]/div/div/h2/text()').extract_first().strip()
         price = re.sub('[Rp. ]', "", price_tmp)
 
         # cp = response.xpath('//html/body/div/div/table/tbody/tr/td/table/tbody/tr/td/div/div/div/div/a/text()').extract_first()
@@ -62,7 +65,8 @@ class Tes1(scrapy.Spider):
                     #'/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/div[2]/table/tbody/tr/td[1]/div/text()').extract_first()
         model = model.strip() if model is not None else '' 
         # tipe = response.xpath('/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/div[2]/table/tbody/tr/td[1]/div[@class="variant_td"]/text()').extract_first()
-        tipe = response.xpath('/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/div[2]/table/tbody/tr/td[1]/div/text()').extract_first()
+        # tipe = response.xpath('/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/div[2]/table/tbody/tr/td[1]/div/text()').extract_first()
+        tipe = response.xpath('/html/body/div[3]/div/div[3]/div[1]/div[5]/div[2]/table/tbody/tr/td[1]/div[@class="variant_td"]/text()').extract_first()
         # tipe = tipe.strip() if tipe is not None else ''
         # print "tipe : ", tipe
         
@@ -72,8 +76,8 @@ class Tes1(scrapy.Spider):
         # print "ownership : ", ownership
         engine_capacity = ''
         engine_type = ''
-        transmission = response.xpath('/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/div[2]/table/tbody/tr/td[2]/div/text()').extract_first()
-        # transmission = response.xpath('/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/div[2]/table/tbody/tr/td[1]/div/text()').extract_first()
+        # transmission = response.xpath('/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/div[2]/table/tbody/tr/td[2]/div/text()').extract_first()
+        transmission = response.xpath('/html/body/div[3]/div/div[3]/div[1]/div[5]/div[2]/table/tbody/tr/td[2]/div/text()').extract_first()
         # print "transmission : ", transmission
 
         doors = ''
@@ -82,7 +86,8 @@ class Tes1(scrapy.Spider):
         gps = ''
         radio = ''
         cd_player = ''
-        posted = '\n'.join(response.xpath('//td[@class="top_timer"]/text()').extract()).strip()
+        # posted = '\n'.join(response.xpath('//td[@class="top_timer"]/text()').extract()).strip()
+        posted = '\n'.join(response.xpath('//li[@class="top_timer"]/text()').extract()).strip()
         nego = ''
         uploaded_by = ''
         phone = ''      
