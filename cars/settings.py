@@ -46,9 +46,15 @@ DOWNLOAD_DELAY = 0.5
 
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
+SPIDER_MIDDLEWARES = {
 #    'cars.middlewares.MyCustomSpiderMiddleware': 543,
-#}
+#    'cars.DeltaFetch': 100,
+    'scrapy_deltafetch.DeltaFetch': 100,
+#    'cars.DeltaFetch': 100,
+}
+
+DELTAFETCH_ENABLED = True
+DELTAFETCH_DIR = '/home/hendisantika/Documents/python/cars/cars/logs'
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
