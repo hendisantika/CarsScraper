@@ -1,6 +1,6 @@
-<<<<<<< HEAD
 #Scrapy Python
 #Finished @ Friday, November 4th 2016 13.30 WIB
+#Modified Everyday Since Tuesday, December 13 2016
 #Created by : Hendi Santika
 #Email : hendisantika@gmail.com
 #Waslap / Telegram : +6281321411881
@@ -8,11 +8,6 @@
 
 import datetime
 import re
-=======
-#UDAH OKE UNTUK INSERT INTO MYSQL DB NYA MAH
-#TINGGAL NEXT PAGE
->>>>>>> 0bd91dad8fef2c25ae9f7258b04b2c73e5f666b3
-
 import MySQLdb
 import scrapy
 from tld import get_tld
@@ -41,7 +36,8 @@ class Tes1(scrapy.Spider):
             yield request
 
         # process next page
-        next_page_url = response.xpath('/html/body/div[2]/div/div[4]/div[3]/div[1]/div[@class="pagination"]/a[@class="next_page"]/@href').extract_first() #UDAH OK NICH NEXT PAGE NYA
+        next_page_url = response.xpath(
+            '/html/body/div[2]/div/div[4]/div[3]/div[1]/div[@class="pagination"]/a[@class="next_page"]/@href').extract_first()  # UDAH OK NICH NEXT PAGE NYA
         # next_page_url = response.xpath('/html/body/div[2]/div/div[4]/div[3]/div[1]/div/a[8]/@href').extract_first()  # YANG INI BUAT NGETES DOANG
         absolute_next_page_url = response.urljoin(next_page_url)
         request = scrapy.Request(absolute_next_page_url)
@@ -61,16 +57,10 @@ class Tes1(scrapy.Spider):
         except:
             province = ''
 
-<<<<<<< HEAD
         desc = '\n'.join(response.xpath('//div[@class="ad_show_detail"]/text()').extract()).strip().replace('<br>',
                                                                                                             '\n')
         # '/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/text()').extract_first()
 
-=======
-        desc = '\n'.join(response.xpath('//div[@class="ad_show_detail"]/text()').extract()).strip().replace('<br>', '\n')
-            #'/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/text()').extract_first()    
-        
->>>>>>> 0bd91dad8fef2c25ae9f7258b04b2c73e5f666b3
         # price_tmp = response.xpath('//div[@class="real_price"]/text()').extract_first().strip()
         price_tmp = ''.join(response.xpath('//div[@class="original-price"]/h2/text()').extract()).strip()
         price = re.sub('[Rp. ]', "", price_tmp)
@@ -81,7 +71,6 @@ class Tes1(scrapy.Spider):
         # print "contact person : ", cp
 
         ss = get_tld(response.url)
-<<<<<<< HEAD
         year = 0
         brand = ' '.join(response.url.split('/')[5].split('-')[1:]).title()
         model = response.xpath(
@@ -92,16 +81,6 @@ class Tes1(scrapy.Spider):
         # tipe = response.xpath('/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/div[2]/table/tbody/tr/td[1]/div/text()').extract_first()
         tipe = response.xpath(
             '//table[@class="options_table"]//td[contains(text(), "Tipe")]/div[@class="variant_td"]/text()').extract_first()
-=======
-        year = ''
-        brand = ' '.join(response.url.split('/')[5].split('-')[1:]).title()
-        model = response.xpath('/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/div[2]/table/tbody/tr/td[1]/div/text()').extract_first()
-                    #'/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/div[2]/table/tbody/tr/td[1]/div/text()').extract_first()
-        model = model.strip() if model is not None else '' 
-        # tipe = response.xpath('/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/div[2]/table/tbody/tr/td[1]/div[@class="variant_td"]/text()').extract_first()
-        # tipe = response.xpath('/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/div[2]/table/tbody/tr/td[1]/div/text()').extract_first()
-        tipe = response.xpath('//table[@class="options_table"]//td[contains(text(), "Tipe")]/div[@class="variant_td"]/text()').extract_first()
->>>>>>> 0bd91dad8fef2c25ae9f7258b04b2c73e5f666b3
         tipe = tipe.strip() if tipe is not None else ''
         # print "tipe : ", tipe
 
@@ -111,7 +90,6 @@ class Tes1(scrapy.Spider):
         else:
             ownership = 'new'
         # print "ownership : ", ownership
-<<<<<<< HEAD
         engine_capacity = 0
         engine_type = response.xpath(
             '//table[@class="options_table"]//td[contains(text(), "Bahan bakar")]/div[@class="variant_td"]/text()').extract_first()
@@ -119,13 +97,6 @@ class Tes1(scrapy.Spider):
         # transmission = response.xpath('/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/div[2]/table/tbody/tr/td[2]/div/text()').extract_first()
         transmission = response.xpath(
             '//table[@class="options_table"]//td[contains(text(), "Transmisi")]/div[@class="variant_td"]/text()').extract_first()
-=======
-        engine_capacity = ''
-        engine_type = response.xpath('//table[@class="options_table"]//td[contains(text(), "Bahan bakar")]/div[@class="variant_td"]/text()').extract_first()
-        engine_type = engine_type.strip() if engine_type is not None else ''
-        # transmission = response.xpath('/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/div[2]/table/tbody/tr/td[2]/div/text()').extract_first()
-        transmission = response.xpath('//table[@class="options_table"]//td[contains(text(), "Transmisi")]/div[@class="variant_td"]/text()').extract_first()
->>>>>>> 0bd91dad8fef2c25ae9f7258b04b2c73e5f666b3
         transmission = transmission.strip() if transmission is not None else ''
         # print "transmission : ", transmission
 
@@ -136,7 +107,6 @@ class Tes1(scrapy.Spider):
         radio = ''
         cd_player = ''
         # posted = '\n'.join(response.xpath('//td[@class="top_timer"]/text()').extract()).strip()
-<<<<<<< HEAD
         posted_tmp = '\n'.join(response.xpath('//li[@class="top_timer"]/text()').extract()).strip()
         posted_tmp = filter(None, re.split(" ", posted_tmp))
 
@@ -150,15 +120,11 @@ class Tes1(scrapy.Spider):
             a1 = posted_tmp[0]
             posted = datetime.datetime.now() - datetime.timedelta(days=int(a1))
 
-=======
-        posted = '\n'.join(response.xpath('//li[@class="top_timer"]/text()').extract()).strip()
->>>>>>> 0bd91dad8fef2c25ae9f7258b04b2c73e5f666b3
         nego = ''
         uploaded_by = ''
         phone = ''
         seen = response.xpath('//*[@id="view_count"]/text()').extract_first().strip()
 
-<<<<<<< HEAD
         c.execute(
             "insert into cars(url, title, city, province, description, price, contact_person, source_site, year, brand,  "
             "model, type, ownership, engine_capacity, engine_type, transmission, doors, color, airbags, satnav, radio, cd_player,  "
@@ -170,12 +136,6 @@ class Tes1(scrapy.Spider):
              phone,
              seen))
         # self.db.commit()
-=======
-        c.execute("insert into jualo_cars(url, title, city, province, description, price, contact_person, source_site, year, brand,  model, type, ownership, engine_capacity, engine_type, transmission, doors, color, airbags, gps, radio, cd_player,  posted, nego, uploaded_by, phone, seen) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (response.url, title, city, province, desc, price, cp, ss,  year, model, tipe, ownership, engine_capacity, engine_type, transmission, doors, color, airbags, gps, radio, cd_player, posted, nego, uploaded_by, phone, seen))
-        self.db.commit()   
-
-        # print "Title : ", title 
->>>>>>> 0bd91dad8fef2c25ae9f7258b04b2c73e5f666b3
 
         cars = {
             'url': response.url,
@@ -192,7 +152,6 @@ class Tes1(scrapy.Spider):
             'type': tipe,
             'ownership': ownership,
             'engine_capacity': engine_capacity,
-<<<<<<< HEAD
             'engine_type': engine_type,
             'transmission': transmission,
             'doors': doors,
@@ -208,20 +167,3 @@ class Tes1(scrapy.Spider):
             'seen': seen
         }
         yield cars
-=======
-            'engine_type'   : engine_type,
-            'transmission'  : transmission,
-            'doors'         : doors,
-            'color'         : color,
-            'airbags'       : airbags,
-            'gps'           : gps,
-            'radio'         : radio,
-            'cd_player'     : cd_player,
-            'posted'        : posted,
-            'nego'          : nego,
-            'uploaded_by'   : uploaded_by,
-            'phone'         : phone,
-            'seen'          : seen 
-            }
-        yield cars                 
->>>>>>> 0bd91dad8fef2c25ae9f7258b04b2c73e5f666b3
