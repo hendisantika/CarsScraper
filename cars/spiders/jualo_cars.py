@@ -43,7 +43,7 @@ class Tes1(scrapy.Spider):
         city_tmp1 = ' '.join(map(unicode.strip, response.xpath('//li[@class="top_location"]/text()').extract())).strip()
         city = ','.join(city_tmp1.split(',')[:-1]).strip()
         try:
-            province = ','.join(city_tmp1.split(',')[-1]).strip()
+            province = city_tmp1.split(',')[-1].strip()
         except:
             province = ''
 
@@ -51,24 +51,24 @@ class Tes1(scrapy.Spider):
             #'/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/text()').extract_first()    
         
         # price_tmp = response.xpath('//div[@class="real_price"]/text()').extract_first().strip()
-        price_tmp = response.xpath('/html/body/div[3]/div/div[3]/div[2]/div[2]/div[1]/div/div/h2/text()').extract_first().strip()
+        price_tmp = ''.join(response.xpath('//div[@class="original-price"]/h2/text()').extract()).strip()
         price = re.sub('[Rp. ]', "", price_tmp)
 
         # cp = response.xpath('//html/body/div/div/table/tbody/tr/td/table/tbody/tr/td/div/div/div/div/a/text()').extract_first()
-        cp = response.xpath('/html/body/div[3]/div/table/tbody/tr/td[2]/table/tbody/tr[4]/td/div/div[2]/div[@class="col-md-12"]/div[@class="col-md-12 name-user"]/a/text()').extract_first()
+        cp = response.xpath('//div[contains(@class, "name-user")]/a/text()').extract_first()
         cp = cp.strip() if cp is not None else ''
         # print "contact person : ", cp
         
         ss = get_tld(response.url)
         year = ''
-        brand = ''
+        brand = ' '.join(response.url.split('/')[5].split('-')[1:]).title()
         model = response.xpath('/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/div[2]/table/tbody/tr/td[1]/div/text()').extract_first()
                     #'/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/div[2]/table/tbody/tr/td[1]/div/text()').extract_first()
         model = model.strip() if model is not None else '' 
         # tipe = response.xpath('/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/div[2]/table/tbody/tr/td[1]/div[@class="variant_td"]/text()').extract_first()
         # tipe = response.xpath('/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/div[2]/table/tbody/tr/td[1]/div/text()').extract_first()
-        tipe = response.xpath('/html/body/div[3]/div/div[3]/div[1]/div[5]/div[2]/table/tbody/tr/td[1]/div[@class="variant_td"]/text()').extract_first()
-        # tipe = tipe.strip() if tipe is not None else ''
+        tipe = response.xpath('//table[@class="options_table"]//td[contains(text(), "Tipe")]/div[@class="variant_td"]/text()').extract_first()
+        tipe = tipe.strip() if tipe is not None else ''
         # print "tipe : ", tipe
         
         ownership = '\n'.join(response.xpath('//td[@class="second-hand"]/text()').extract()).strip()
@@ -76,9 +76,11 @@ class Tes1(scrapy.Spider):
         else : ownership = 'new'
         # print "ownership : ", ownership
         engine_capacity = ''
-        engine_type = ''
+        engine_type = response.xpath('//table[@class="options_table"]//td[contains(text(), "Bahan bakar")]/div[@class="variant_td"]/text()').extract_first()
+        engine_type = engine_type.strip() if engine_type is not None else ''
         # transmission = response.xpath('/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/div[2]/table/tbody/tr/td[2]/div/text()').extract_first()
-        transmission = response.xpath('/html/body/div[3]/div/div[3]/div[1]/div[5]/div[2]/table/tbody/tr/td[2]/div/text()').extract_first()
+        transmission = response.xpath('//table[@class="options_table"]//td[contains(text(), "Transmisi")]/div[@class="variant_td"]/text()').extract_first()
+        transmission = transmission.strip() if transmission is not None else ''
         # print "transmission : ", transmission
 
         doors = ''
@@ -94,9 +96,8 @@ class Tes1(scrapy.Spider):
         phone = ''      
         seen = response.xpath('//*[@id="view_count"]/text()').extract_first().strip()
 
-        # c.execute("insert into jualo_cars(url, title, city, province, description, price, contact_person, source_site, year, brand,  model, type, ownership, engine_capacity, engine_type, transmission, doors, color, airbags, gps, radio, cd_player,  posted, nego, uploaded_by, phone, seen) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
-        #          (response.url, title, city, province, desc, price, cp, ss,  year, model, tipe, ownership, engine_capacity, engine_type, transmission, doors, color, airbags, gps, radio, cd_player, posted, nego, uploaded_by, phone, seen)
-        # self.db.commit()   
+        c.execute("insert into jualo_cars(url, title, city, province, description, price, contact_person, source_site, year, brand,  model, type, ownership, engine_capacity, engine_type, transmission, doors, color, airbags, gps, radio, cd_player,  posted, nego, uploaded_by, phone, seen) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (response.url, title, city, province, desc, price, cp, ss,  year, model, tipe, ownership, engine_capacity, engine_type, transmission, doors, color, airbags, gps, radio, cd_player, posted, nego, uploaded_by, phone, seen))
+        self.db.commit()   
 
         # print "Title : ", title 
 
