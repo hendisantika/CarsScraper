@@ -21,7 +21,7 @@ class Tes1(scrapy.Spider):
         self.stmt = "insert into cars(url, title, price, posted, city, province, contact_person, description, source_site, year, transmission, brand, model, type, ownership, nego, uploaded_by, phone, seen) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
     def parse(self, response):
-        urls = response.xpath('//*[@id="catalog-index"]/section/section/div[3]/div[3]/div[1]/div[1]/h5/a/@href').extract()
+        urls = response.xpath('//section[contains(@class, "catalog-listing")]//h5[contains(@class, "item-title")]/a/@href').extract()
         for url in urls:
             absolute_url = response.urljoin(url)
             request = scrapy.Request(
@@ -31,71 +31,37 @@ class Tes1(scrapy.Spider):
         # process next page
         # next_page_url = response.xpath('//*[@id="body-container"]/div/div/div/span/a/@href').extract_first()
         # next_page_url = response.xpath('//*[@id="body-container"]/div/div/div[2]/span[16]/a/@href').extract_first() # YANG INI UNTUK NGETES DOANG
-        next_page_url = response.xpath('//*[@id="body-container"]/div/div/div/span[@class="fbold next abs large"]/a/@href').extract_first() #YANG INI UDAH OK NEXT PAGE NYA NICH
+        current_page = int(response.xpath('//ul[contains(@class,"pagination")]/li[@class="current"]/a/text()').extract_first())
+        last_page = int(response.xpath('//ul[contains(@class,"pagination")]/li[last()]/a/text()').extract_first())
+        next_page_url = '?page=%d' % (current_page+1 if current_page < last_page else None,)
+        if next_page_url is None:
+            return
+
         absolute_next_page_url = response.urljoin(next_page_url)
         request = scrapy.Request(absolute_next_page_url)
         yield request
 
     def parse_cars(self, response):
         c = self.db.cursor()
-        title = response.xpath(
-            '//*[@id="catalog-index"]/section/section/div[3]/div[3]/div[1]/div[1]/h5/a/text()').extract_first().strip()
-        price_tmp = response.xpath(
-            '//*[@id="offeractions"]/div/div/div/strong/text()').extract_first().strip()
+        title = response.xpath('//div[@class="title-bar"]/span/text()').extract_first().strip()
+        price_tmp = response.xpath('//div[contains(@class, "car-value")]/output/text()').extract_first().strip()
         price = re.sub('[Rp. ]', "", price_tmp)
-        city_tmp1 = response.xpath(
-            '//*[@id="offer_active"]/div/div/div/div/p/span/span/strong/a/text()').extract_first()
-        city_tmp2 = city_tmp1.split(",")
-        city = city_tmp2[0].strip()
-        province = city_tmp2[1].strip()
-        # posted_tmp = map(unicode.strip, response.xpath('//*[@id="offer_active"]/div[3]/div[1]/div[1]/div[1]/p/small/span/text()').extract_first())
-        # posted_tmp = response.xpath('//*[@id="offer_active"]/div/div/div/div/p/small/span/text()').extract()
-        # posted_tmp = response.xpath('//*[@id="offer_active"]/div/div/div/div/p/small/span/text()').extract()
-        # posted_tmp = response.xpath('//*[@id="offer_active"]/div/div/div/div/p/small/span/text()').extract()
-        posted_tmp = (' '.join(map(unicode.strip, response.xpath('//*[@id="offer_active"]/div[3]/div[1]/div[1]/div[1]/p/small/span/text()').extract()))).strip()
-        # posted_tmp = response.xpath('normalize-space(//*[@id="offer_active"]/div/div/div/div/p/small/span/text()').extract()
-            # '//*[@id="offer_active"]/div[3]/div[1]/div[1]/div[1]/p/small/span/text()').extract_first().strip()
-        # posted = posted_tmp
-        # posted = re.sub('sejak,', "", posted_tmp)
-        posted = posted_tmp 
-        b = {'sejak ': '', ',' : '', '  ' : ' '}
-        # Pattern untuk tanggal posting
-        # b = {'Ditambahkan': '', 'sejak': '', ',' : '', '  ' : ' '}
-        for x,y in b.items():
-            posted = posted.replace(x, y).strip()
-
-        cp = response.xpath(
-            '//*[@id="offeractions"]/div/div/div/div/p/span/text()').extract_first().strip()
-        desc = response.xpath(
-            '//*[@id="textContent"]/p/text()').extract_first().strip()
+        city = ''
+        province = ' '.join(response.xpath('//div[@id="addressBlock"]/address/text()').extract()).strip()
+        posted = response.xpath('//p[@class="submitted"]/span[1]/text()').extract_first().strip()
+        cp = response.xpath('//p[contains(@class, "dealer-name")]/strong/text()').extract_first()
+        desc = ''
         ss = get_tld(response.url)
-        year = response.xpath(
-                    '//*[@id="offerdescription"]/div[2]/div[1]/ul/li[3]/a/text()').extract_first().strip()
-        transmission = response.xpath(
-                    '//*[@id="offerdescription"]/div[2]/div[1]/ul/li[2]/a/text()').extract_first().strip()
+        year = ''
+        transmission = ''
         brand = ''
-        model = response.xpath(
-                    '//*[@id="offerdescription"]/div[2]/div[1]/ul/li[1]/a/text()').extract_first().strip()
+        model = ''
         tipe = ''
-        ownership = 'Used'
-        nego = response.xpath(
-                    '//*[@id="offeractions"]/div/div/div[1]/small/text()').extract_first().strip()
-        uploaded_by = response.xpath(
-                        '//*[@id="offer_active"]/div[3]/div[1]/div[1]/div[1]/p/small/span/a/span/text()').extract_first().strip()
+        ownership = ''
+        nego = ''
+        uploaded_by = ''
         phone = ''
-        seen = response.xpath(
-                        '//*[@id="offerbottombar"]/div[3]/strong/text()').extract_first().strip()
-
-
-        # print("Posted0 ", posted0)
-        # print("Posted1 ", posted1)
-        # print("Posted2 ", posted2)
-        # print("Posted3 ", posted3)
-        # print("posted :", posted)
-
-        # c.execute("insert into cars(url, title, price, posted, city, province, contact_person, description, source_site, year, transmission, brand, model, type, ownership, nego, uploaded_by, phone, seen) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
-        #          (response.url, title, price, posted, city, province, cp, desc, ss, year, transmission, brand, model, tipe, ownership, nego, uploaded_by, phone, seen))
-        # self.db.commit()    
+        seen = ''
 
         cars = {
             'url'           : response.url,
