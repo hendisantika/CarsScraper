@@ -135,7 +135,7 @@ class Tes1(scrapy.Spider):
              engine_type, transmission, doors, color, airbags, satnav, radio, cd_player, posted, nego, uploaded_by,
              phone,
              seen))
-        # self.db.commit()
+        self.db.commit()
 
         cars = {
             'url': response.url,
