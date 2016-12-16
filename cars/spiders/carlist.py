@@ -1,14 +1,18 @@
 #Scrapy Python
 #Finished @ Friday, November 4th 2016 13.30 WIB
+#Modified Everyday Since Tuesday, December 13 2016
 #Created by : Hendi Santika
 #Waslap / Telegram : +6281321411881
 #Skype : hendi.santika 
 
-import scrapy
-import MySQLdb
+import datetime
 import re
+from datetime import datetime
+
+import MySQLdb
+import scrapy
 from tld import get_tld
-import time
+
 
 class Mudah(scrapy.Spider):
     name = "carlist"
@@ -82,8 +86,7 @@ class Mudah(scrapy.Spider):
         tipe = response.xpath('//span[text()="Variant"]/following-sibling::span/text()').extract_first()
                     #'/html/body/div[3]/div/table/tbody/tr/td[1]/div[4]/div[2]/table/tbody/tr/td[1]/div/text()').extract_first()
         tipe = tipe.strip() if tipe is not None else ''
-        # print "tipe : ", tipe
-        
+
         ownership = '\n'.join(response.xpath('///*[@id="listing_2912099"]/div[2]/div[2]/div[5]/div/p[9]/span[2]/text()').extract()).strip()
         if ownership == "Bekas" : ownership = 'used'
         else : ownership = 'new'
@@ -102,6 +105,12 @@ class Mudah(scrapy.Spider):
         cd_player = ''
         #posted = '\n'.join(response.xpath('//*[@id="listing_2912099"]/div[2]/div[1]/div[1]/div/div[1]/div[2]/text()').extract()).strip()
         posted = response.xpath('//div[contains(@class, "listing__updated")]/text()').extract_first().split(':')[1].strip()
+        data = filter(None, re.split(" ", posted))
+        tgl1 = data[1].replace(',', '')
+        bln1 = data[0]
+        thn1 = data[2]
+        posted = datetime.strptime(tgl1 + " " + bln1 + " " + thn1, '%d %B %Y')
+
         nego = ''
         uploaded_by = ''
         phone = ''  
@@ -110,7 +119,7 @@ class Mudah(scrapy.Spider):
 
         c.execute("insert into jualo_cars(url, title, city, province, description, price, contact_person, source_site, year, brand,  model, type, ownership, engine_capacity, engine_type, transmission, doors, color, airbags, gps, radio, cd_player,  posted, nego, uploaded_by, phone) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
                  (response.url, title, city, province, desc, price, cp, ss,  year, brand, model, tipe, ownership, engine_capacity, engine_type, transmission, doors, color, airbags, gps, radio, cd_player, posted, nego, uploaded_by, phone))
-        self.db.commit()   
+        # self.db.commit()
 
         # print "Description : ", desc 
 
@@ -143,4 +152,4 @@ class Mudah(scrapy.Spider):
             'phone'         : phone,
             # 'seen'          : seen 
             }
-        yield cars                 
+        yield cars

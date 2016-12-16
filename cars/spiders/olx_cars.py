@@ -6,15 +6,15 @@
 #Waslap / Telegram : +6281321411881
 #Skype : hendi.santika 
 
-import scrapy
-import MySQLdb
-import re
-from tld import get_tld
-from string import Template
-import time
 import datetime
-from datetime import datetime
+import re
+import time
 from datetime import date, timedelta
+from datetime import datetime
+
+import MySQLdb
+import scrapy
+from tld import get_tld
 
 
 class Tes1(scrapy.Spider):
