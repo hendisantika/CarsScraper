@@ -67,7 +67,7 @@ class Tes1(scrapy.Spider):
         ownership = ''
         nego = ''
         uploaded_by = ''
-        phone = ''
+        phone = response.xpath('//input[@name="seller_phone"]/@value').extract_first()
         seen = ''
 
         cars = {
