@@ -10,8 +10,9 @@ import scrapy
 import MySQLdb
 import re
 from tld import get_tld
-from string import Template
 import time
+import datetime
+from datetime import datetime
 
 class Tes1(scrapy.Spider):
     name = "mobil123"
@@ -21,7 +22,9 @@ class Tes1(scrapy.Spider):
 
     def __init__(self):
         self.db = MySQLdb.connect("127.0.0.1", "root", "root", "olx")
-        self.stmt = "insert into mobil123(url, title, price, posted, city, province, source_site, year, transmission, brand, model, type, ownership, engine_capacity, doors) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        self.stmt = "insert into mobil123(url, title, price, posted, city, province, source_site, year, transmission, " \
+                    "brand, model, type, ownership, engine_capacity, doors) " \
+                    "values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
     def parse(self, response):
         # urls = response.xpath('//*[@id="listing_3232491"]/div/div[2]/h2/a/@href').extract()
@@ -95,6 +98,13 @@ class Tes1(scrapy.Spider):
         # b = {'Ditambahkan': '', 'sejak': '', ',' : '', '  ' : ' '}
         # for x,y in b.items():
         #     posted = posted.replace(x, y).strip()
+        data = filter(None, re.split(" ", posted))
+        tgl1 = data[1].replace(',', '')
+        bln1 = data[0]
+        thn1 = data[2]
+        posted = datetime.strptime(tgl1 + " " + bln1 + " " + thn1, '%d %B %Y')
+
+        print("Posted ", tgl1 + " " + bln1 + " " + thn1)
 
         # cp = ''
         # cp = response.xpath('//*[@id="listing_3232491"]/div[2]/div[2]/div[1]/div/div/div[1]/text()').extract_first().strip()
@@ -137,10 +147,12 @@ class Tes1(scrapy.Spider):
         # print("url :", response.url)
         # print("title :", title)
         # print("Posted2 ", posted2)
-        # print("Posted3 ", posted3)
+        # print("Posted ", posted)
         # print("doors : ",  doors)
 
-        c.execute("insert into mobil123(url, title, price, posted, city, province, source_site, year, transmission, brand, model, type, ownership, engine_capacity, doors) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
+        c.execute("insert into mobil123(url, title, price, posted, city, province, source_site, year, transmission, "
+                  "brand, model, type, ownership, engine_capacity, doors) "
+                  "values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                  (response.url, title, price, posted, city, province, ss, year, transmission, brand, model, tipe, ownership, eCap, doors))
         # time.sleep(1)
         # self.db.commit()
@@ -168,7 +180,7 @@ class Tes1(scrapy.Spider):
             # 'phone'         : phone,   
             'color'         : color   
             }
-        yield cars                 
+        # yield cars
 
 
 
