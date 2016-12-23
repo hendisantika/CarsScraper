@@ -21,8 +21,8 @@ class Mudah(scrapy.Spider):
     ]
 
     def __init__(self):
-        self.db = MySQLdb.connect("127.0.0.1", "root", "root", "olx")
-        self.stmt = "insert into jualo_cars(url, title, city, province, description, price, contact_person, source_site, year, brand,  model, type, ownership, engine_capacity, engine_type, transmission, doors, color, airbags, gps, radio, cd_player,  posted, nego, uploaded_by, phone, seen) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        self.db = MySQLdb.connect("127.0.0.1", "root", "root", "scrapyDB")
+        self.stmt = "insert into cars(url, title, city, province, description, price, contact_person, source_site, year, brand,  model, type, ownership, engine_capacity, engine_type, transmission, doors, color, airbags, gps, radio, cd_player,  posted, nego, uploaded_by, phone, seen) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         # pass
 
     def parse(self, response):
@@ -119,9 +119,7 @@ class Mudah(scrapy.Spider):
 
         c.execute("insert into jualo_cars(url, title, city, province, description, price, contact_person, source_site, year, brand,  model, type, ownership, engine_capacity, engine_type, transmission, doors, color, airbags, gps, radio, cd_player,  posted, nego, uploaded_by, phone) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
                  (response.url, title, city, province, desc, price, cp, ss,  year, brand, model, tipe, ownership, engine_capacity, engine_type, transmission, doors, color, airbags, gps, radio, cd_player, posted, nego, uploaded_by, phone))
-        # self.db.commit()
-
-        # print "Description : ", desc 
+        self.db.commit()
 
         cars = {
             'url'           : response.url,
