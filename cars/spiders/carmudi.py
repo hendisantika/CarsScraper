@@ -48,9 +48,11 @@ class Tes1(scrapy.Spider):
         title = response.xpath('//div[@class="title-bar"]/span/text()').extract_first().strip()
         price_tmp = response.xpath('//div[contains(@class, "car-value")]/output/text()').extract_first().strip()
         price = re.sub('[Rp. ]', "", price_tmp)
+        address = (' '.join(response.xpath('//div[@id="addressBlock"]/address/text()').extract()).strip()).split('\n')[0].strip()
         city = ''
-        province = ' '.join(response.xpath('//div[@id="addressBlock"]/address/text()').extract()).strip()
+        province = address
         posted = response.xpath('//p[@class="submitted"]/span[1]/text()').extract_first().strip()
+<<<<<<< HEAD
         cp = response.xpath('//p[contains(@class, "dealer-name")]/strong/text()').extract_first()
         desc = response.xpath('/html/body/aside/div[1]/main/section[2]/section/div[2]/div[2]/div[3]/p/text()').extract()
         ss = get_tld(response.url)
@@ -59,6 +61,21 @@ class Tes1(scrapy.Spider):
         engine_capacity = response.xpath('/html/body/aside/div[1]/main/section[2]/section/div[2]/div[1]/div[4]/div/div[4]/span/text()').extract_first()
         brand = ''
         model = ''
+=======
+        cp = response.xpath('//p[contains(@class, "dealer-name")]//strong/text()').extract_first()
+        desc = '\n'.join(response.xpath('//div[contains(@class, "description")]/p/text()').extract())
+        ss = get_tld(response.url)
+        year = ''
+        transmission = response.xpath('//i[contains(@class,"icon-gearshift")]/following-sibling::span/text()').extract_first()
+        brand = response.xpath('//ol[@class="breadcrumbs"]/li[3]/a/span/text()').extract_first()
+        model = response.xpath('//ol[@class="breadcrumbs"]/li[4]/a/span/text()').extract_first()
+        color = ''.join(response.xpath('//div[@id="details"]//li/span[text()="Golongan Warna"]/parent::li/text()').extract()).strip()
+        engine_capacity = response.xpath('//i[contains(@class,"icon-engine")]/following-sibling::span/text()').extract_first()
+        engine_type = response.xpath('//i[contains(@class,"icon-fuel")]/following-sibling::span/text()').extract_first()
+        doors = ''.join(response.xpath('//div[@id="details"]//li/span[text()="Pintu"]/parent::li/text()').extract()).strip()
+        radio = ''.join(response.xpath('//span[text()="Radio"]/parent::li/text()').extract()).strip()
+        cd_player = ''.join(response.xpath('//span[text()="CD Player"]/parent::li/text()').extract()).strip()
+>>>>>>> 747af9e6f349b504e7f4a28a5f13f1db4ce881e9
         tipe = ''
         ownership = ''
         gps = ''
@@ -69,7 +86,7 @@ class Tes1(scrapy.Spider):
         cd_player = response.xpath('//*[@id="Interior>"]/div[2]/div[2]/ul/li[2]/text()').extract_first().strip()
         nego = response.xpath('/html/body/aside/div[1]/main/section[2]/section/div[2]/div[1]/div[2]/div[1]/p/text()').extract_first().strip()
         uploaded_by = ''
-        phone = ''
+        phone = response.xpath('//input[@name="seller_phone"]/@value').extract_first()
         seen = ''
 
         c.execute(
@@ -97,6 +114,12 @@ class Tes1(scrapy.Spider):
             'engine_capacity': engine_capacity,
             'brand'         : brand,
             'model'         : model,    
+            'engine_capacity': engine_capacity,
+            'engine_type'   : engine_type,
+            'color'         : color,
+            'doors'         : doors,
+            'radio'         : radio,
+            'cd_player'     : cd_player,
             'type'          : tipe,   
             'year'          : year,   
             'ownership'     : ownership,
