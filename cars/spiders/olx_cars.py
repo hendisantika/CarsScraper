@@ -181,7 +181,7 @@ class Tes1(scrapy.Spider):
         c.execute("insert into cars(url, title, price, posted, city, province, contact_person, description, source_site, year, "
                   "transmission, brand, model, type, ownership, nego, uploaded_by, phone, seen) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                  (response.url, title, price, posted, city, province, cp, desc, ss, year, transmission, brand, model, tipe, ownership, nego, uploaded_by, phone, seen))
-        self.db.commit()    
+        self.db.commit()
 
         cars = {
             'url'           : response.url,
