@@ -4,11 +4,12 @@
 #Waslap / Telegram : +6281321411881
 #Skype : hendi.santika 
 
-import scrapy
 import MySQLdb
 import re
+
+import scrapy
 from tld import get_tld
-from string import Template
+
 
 class Tes1(scrapy.Spider):
     name = "carmudi"
