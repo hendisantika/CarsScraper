@@ -114,16 +114,16 @@ class Tes1(scrapy.Spider):
         #     '//*[@id="textContent"]/p/text()').extract_first().strip()
         ss = get_tld(response.url)
         # year = response.xpath('//*[@id="listing_3232491"]/div[2]/div[2]/div[5]/div/p[4]/span[2]/text()').extract_first().strip()
-        year = response.xpath('//article[contains(@class,"listing")]/div[2]/div[2]/div[5]/div/p[4]/span[2]/text()').extract_first()
+        year = response.xpath('//p[contains(@class,"list-item")]/span[@class="list-item__title" and text()="Tahun"]/following-sibling::span/text()').extract_first()
         # transmission = response.xpath('//*[@id="listing_3232491"]/div[2]/div[2]/div[5]/div/p[6]/span[2]/text()').extract_first().strip()
-        transmission = response.xpath('//article[contains(@class,"listing")]/div[2]/div[2]/div[5]/div/p[6]/span[2]/text()').extract_first()
+        transmission = response.xpath('//p[contains(@class,"specifications__text")]/span[contains(@class, "grid__item") and text()="Transmisi"]/following-sibling::span/text()').extract_first()
         # brand = response.xpath('//*[@id="listing_3232491"]/div[2]/div[2]/div[5]/div/p[1]/span[2]').extract_first().strip()
-        brand = response.xpath('//article[contains(@class,"listing")]/div[2]/div[2]/div[5]/div/p[1]/span[@class = "float--right"]/text()').extract_first()
+        brand = response.xpath('//p[contains(@class, "list-item")]/span[@class="list-item__title" and text()="Merek"]/following-sibling::span/text()').extract_first()
         # model = response.xpath('//*[@id="listing_3232491"]/div[2]/div[2]/div[5]/div/p[2]/span[2]/text()').extract_first().strip()
-        model = response.xpath('//article[contains(@class,"listing")]/div[2]/div[2]/div[5]/div/p[2]/span[2]/text()').extract_first()
+        model = response.xpath('//p[contains(@class, "list-item")]/span[@class="list-item__title" and text()="Model"]/following-sibling::span/text()').extract_first()
         # tipe = response.xpath('//*[@id="listing_3232491"]/div[2]/div[2]/div[5]/div/p[3]/span[@class = "float--right"]/text()').extract_first()
         # tipe = (''.join(response.xpath('//article[contains(@class,"listing")]/div[2]/div[2]/div[5]/div/p[3]/span/text()').extract_first()))
-        tipe = (''.join(response.xpath('//article[contains(@class,"listing")]/div[2]/div[2]/div[5]/div/p[3]/span[2]/text()').extract()))
+        tipe = response.xpath('//p[contains(@class, "list-item")]/span[@class="list-item__title" and text()="Varian"]/following-sibling::span/text()').extract_first()
         # tipe = tipe.strip()
         ownership = 'Used'
         nego = ''
@@ -132,9 +132,9 @@ class Tes1(scrapy.Spider):
         eCap = re.sub('[c ]', "", eCap)
         eType = ''
         # color = response.xpath('//*[@id="listing_3232491"]/div[2]/div[2]/div[5]/div/p[10]/span[2]/text()').extract_first().strip()
-        color = response.xpath('//article[contains(@class,"listing")]/div[2]/div[2]/div[5]/div/p[10]/span[2]/text()').extract_first()
+        color = response.xpath('//p[contains(@class, "list-item")]/span[@class="list-item__title" and text()="Warna"]/following-sibling::span/text()').extract_first()
         # doors = response.xpath('//*[@id="listing_3232491"]/div[3]/div[1]/div/div[3]/div/div[2]/div[2]/div/div[2]/div[1]/div/p/span[2]/text()').extract_first()
-        doors = response.xpath('//article[contains(@class,"listing")]/div[3]/div[1]/div/div[3]/div/div[2]/div[2]/div/div[2]/div[1]/div/p/span[2]/text()').extract_first().strip()
+        doors = response.xpath('//p[contains(@class, "specifications__text")]/span[contains(@class,"grid__item") and text()="Pintu"]/following-sibling::span/text()').extract_first()
         uploaded_by = ''
         # uploaded_by = response.xpath(
         #                 '//*[@id="offer_active"]/div[3]/div[1]/div[1]/div[1]/p/small/span/a/span/text()').extract_first().strip()
