@@ -52,16 +52,6 @@ class Tes1(scrapy.Spider):
         city = ''
         province = address
         posted = response.xpath('//p[@class="submitted"]/span[1]/text()').extract_first().strip()
-<<<<<<< HEAD
-        cp = response.xpath('//p[contains(@class, "dealer-name")]/strong/text()').extract_first()
-        desc = response.xpath('/html/body/aside/div[1]/main/section[2]/section/div[2]/div[2]/div[3]/p/text()').extract()
-        ss = get_tld(response.url)
-        year = ''
-        transmission = response.xpath('/html/body/aside/div[1]/main/section[2]/section/div[2]/div[1]/div[4]/div/div[2]/span/text()').extract_first().strip()
-        engine_capacity = response.xpath('/html/body/aside/div[1]/main/section[2]/section/div[2]/div[1]/div[4]/div/div[4]/span/text()').extract_first()
-        brand = ''
-        model = ''
-=======
         cp = response.xpath('//p[contains(@class, "dealer-name")]//strong/text()').extract_first()
         desc = '\n'.join(response.xpath('//div[contains(@class, "description")]/p/text()').extract())
         ss = get_tld(response.url)
@@ -75,7 +65,6 @@ class Tes1(scrapy.Spider):
         doors = ''.join(response.xpath('//div[@id="details"]//li/span[text()="Pintu"]/parent::li/text()').extract()).strip()
         radio = ''.join(response.xpath('//span[text()="Radio"]/parent::li/text()').extract()).strip()
         cd_player = ''.join(response.xpath('//span[text()="CD Player"]/parent::li/text()').extract()).strip()
->>>>>>> 747af9e6f349b504e7f4a28a5f13f1db4ce881e9
         tipe = ''
         ownership = ''
         gps = ''

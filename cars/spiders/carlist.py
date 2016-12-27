@@ -39,7 +39,8 @@ class Mudah(scrapy.Spider):
 
         # process next page
         # next_page_url = response.xpath('//*[@id="classified-listings-result"]/div[9]/ul/li[6]/a/@href').extract_first() #YANG INI BUAT NGETES DOANG
-        next_page_url = response.xpath('//li[@class="next"]/a/@href').extract_first() #YANG INI BUAT NGETES DOANG
+        next_page_url = response.xpath('//li[@class="next"]/a/@href').extract_first() #YANG INI UDAH OK NICH
+        # next_page_url = response.xpath('//*[@id="classified-listings-result"]/div[9]/ul/li[6]/a/@href').extract_first()
         # next_page_url = response.xpath('//a[@class="next_page"]/@href').extract_first()
         absolute_next_page_url = response.urljoin(next_page_url)
         request = scrapy.Request(absolute_next_page_url)
@@ -100,7 +101,7 @@ class Mudah(scrapy.Spider):
         doors = response.xpath('//span[text()="Doors"]/following-sibling::span/text()').extract_first()
         color = response.xpath('//span[text()="Colour"]/following-sibling::span/text()').extract_first()
         airbags = ''
-        gps = ''
+        satnav = ''
         radio = ''
         cd_player = ''
         #posted = '\n'.join(response.xpath('//*[@id="listing_2912099"]/div[2]/div[1]/div[1]/div/div[1]/div[2]/text()').extract()).strip()
@@ -117,8 +118,12 @@ class Mudah(scrapy.Spider):
         # seen =''    
         #seen = response.xpath('//*[@id="view_count"]/text()').extract_first().strip()
 
-        c.execute("insert into jualo_cars(url, title, city, province, description, price, contact_person, source_site, year, brand,  model, type, ownership, engine_capacity, engine_type, transmission, doors, color, airbags, gps, radio, cd_player,  posted, nego, uploaded_by, phone) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
-                 (response.url, title, city, province, desc, price, cp, ss,  year, brand, model, tipe, ownership, engine_capacity, engine_type, transmission, doors, color, airbags, gps, radio, cd_player, posted, nego, uploaded_by, phone))
+        c.execute("insert into cars(url, title, city, province, description, price, contact_person, source_site, year, "
+                  "brand,  model, type, ownership, engine_capacity, engine_type, transmission, doors, color, airbags, "
+                  "satnav, radio, cd_player,  posted, nego, uploaded_by, phone) "
+                  "values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                 (response.url, title, city, province, desc, price, cp, ss,  year, brand, model, tipe, ownership,
+                  engine_capacity, engine_type, transmission, doors, color, airbags, satnav, radio, cd_player, posted, nego, uploaded_by, phone))
         self.db.commit()
 
         cars = {
@@ -141,7 +146,7 @@ class Mudah(scrapy.Spider):
             'doors'         : doors,
             'color'         : color,
             'airbags'       : airbags,
-            'gps'           : gps,
+            'satnav'        : satnav,
             'radio'         : radio,
             'cd_player'     : cd_player,
             'posted'        : posted,
