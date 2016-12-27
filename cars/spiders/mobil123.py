@@ -23,8 +23,8 @@ class Tes1(scrapy.Spider):
     def __init__(self):
         self.db = MySQLdb.connect("127.0.0.1", "root", "root", "olx")
         self.stmt = "insert into mobil123(url, title, price, posted, city, province, source_site, year, transmission, " \
-                    "brand, model, type, ownership, engine_capacity, doors) " \
-                    "values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                    "brand, model, type, ownership, engine_capacity, doors, color) " \
+                    "values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
     def parse(self, response):
         # urls = response.xpath('//*[@id="listing_3232491"]/div/div[2]/h2/a/@href').extract()
@@ -104,7 +104,7 @@ class Tes1(scrapy.Spider):
         thn1 = data[2]
         posted = datetime.strptime(tgl1 + " " + bln1 + " " + thn1, '%d %B %Y')
 
-        print("Posted ", tgl1 + " " + bln1 + " " + thn1)
+        # print("Posted ", tgl1 + " " + bln1 + " " + thn1)
 
         # cp = ''
         # cp = response.xpath('//*[@id="listing_3232491"]/div[2]/div[2]/div[1]/div/div/div[1]/text()').extract_first().strip()
@@ -128,7 +128,7 @@ class Tes1(scrapy.Spider):
         ownership = 'Used'
         nego = ''
         # eCap = response.xpath('//*[@id="listing_3232491"]/div[2]/div[2]/div[5]/div/p[5]/span[2]/text()').extract_first().strip()
-        eCap = response.xpath('//article[contains(@class,"listing")]/div[2]/div[2]/div[5]/div/p[5]/span[2]/text()').extract_first()
+        eCap = response.xpath('//article[contains(@class,"listing")]/div[2]/div[2]/div[5]/div/p[6]/span[2]/text()').extract_first()
         eCap = re.sub('[c ]', "", eCap)
         eType = ''
         # color = response.xpath('//*[@id="listing_3232491"]/div[2]/div[2]/div[5]/div/p[10]/span[2]/text()').extract_first().strip()
@@ -151,11 +151,12 @@ class Tes1(scrapy.Spider):
         # print("doors : ",  doors)
 
         c.execute("insert into mobil123(url, title, price, posted, city, province, source_site, year, transmission, "
-                  "brand, model, type, ownership, engine_capacity, doors) "
-                  "values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                 (response.url, title, price, posted, city, province, ss, year, transmission, brand, model, tipe, ownership, eCap, doors))
+                  "brand, model, type, ownership, engine_capacity, doors, color) "
+                  "values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                 (response.url, title, price, posted, city, province, ss, year, transmission, brand, model, tipe,
+                  ownership, eCap, doors, color))
         # time.sleep(1)
-        # self.db.commit()
+        self.db.commit()
 
         cars = {
             'url'           : response.url,
@@ -180,7 +181,7 @@ class Tes1(scrapy.Spider):
             # 'phone'         : phone,   
             'color'         : color   
             }
-        # yield cars
+        yield cars
 
 
 
